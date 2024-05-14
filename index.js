@@ -83,15 +83,11 @@ async function run() {
     });
 
 
-
-
-
-
 // Get all wishlist items
 app.get("/wishlists", async (req, res) => {
   
-    const result = await wishlistCollection.find().toArray();
-    res.send(result);
+  const result = await wishlistCollection.find().toArray();
+  res.send(result);
 
 });
 
@@ -99,28 +95,14 @@ app.get("/wishlists", async (req, res) => {
 
 // Add item to wishlist
 app.post("/wishlists", async (req, res) => {
-  
-    const wishlistData = req.body;
-    const result = await wishlistCollection.insertOne(wishlistData);
-    res.send(result);
 
-});
-// Get item from wishlist by ID
-app.get("/wishlists/:id", async (req, res) => {
- 
-    const id = req.params.id;
-    const query = { _id: new ObjectId(id) };
-    const result = await wishlistCollection.findOne(query);
-    res.send(result);
-
-});
-app.delete('/wishlists/:id', async (req, res) => {
-  const id = req.params.id;
-  const query = { _id: (id) };
-  const result = await wishlistCollection.deleteOne(query);
-
+  const wishlistData = req.body;
+  const result = await wishlistCollection.insertOne(wishlistData);
   res.send(result);
+
 });
+
+
 
 
 

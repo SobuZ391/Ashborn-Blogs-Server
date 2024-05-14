@@ -131,7 +131,36 @@ app.delete('/wishlists/:id', async (req, res) => {
     }
   });
   
-
+   // Endpoint to get comments by blog ID
+app.get('/comments', async (req, res) => {
+  const { blogId } = req.query;
+  try {
+    const comments = await commentsCollection.find({ blogId }).toArray();
+    res.json(comments);
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ error: 'Internal server error', details: error });
+  }
+});
+  
+    // Endpoint to add a new comment
+    app.post('/comments', async (req, res) => {
+      const { blogId, name, image, text } = req.body;
+      const newComment = {
+        blogId,
+        name,
+        image,
+        text
+      };
+      try {
+        const result = await commentsCollection.insertOne(newComment);
+        newComment._id = result.insertedId;
+        res.status(201).json(newComment);
+      } catch (error) {
+        console.error('Error adding comment:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
     
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });

@@ -101,6 +101,15 @@ app.post("/wishlists", async (req, res) => {
   res.send(result);
 
 });
+// Get item from wishlist by ID
+app.get("/wishlists/:id", async (req, res) => {
+
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await wishlistCollection.findOne(query);
+  res.send(result);
+
+});
 
 
 

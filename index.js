@@ -32,6 +32,7 @@ async function run() {
 
     
     const blogsCollection = client.db("Ashborn").collection("blogs");
+    const commentsCollection =client.db("Ashborn").collection("comments");;
     const wishlistCollection =client.db("Ashborn").collection("wishlists");
 
     // Get all blog posts
@@ -118,13 +119,20 @@ app.delete('/wishlists/:id', async (req, res) => {
   
   res.send(result);
   });
+   // Endpoint to get comments by blog ID
+   app.get('/comments/:blogId', async (req, res) => {
+    const { blogId } = req.params;
+    try {
+      const comments = await commentsCollection.find({ blogId }).toArray();
+      res.json(comments);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
   
-  
-  
 
-
-
-
+    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(

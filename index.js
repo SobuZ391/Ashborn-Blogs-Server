@@ -5,14 +5,11 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
-const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:5174"],
-  credentials: true,
-  optionSuccessStatus: 200,
-};
 
 // Middleware
-app.use(cors(corsOptions));
+app.use(
+  cors()
+);
 app.use(express.json({ extended: true }));
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zyr5lk0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -114,11 +111,26 @@ app.get("/wishlists/:id", async (req, res) => {
 
 app.delete('/wishlists/:id', async (req, res) => {
   const id = req.params.id;
-  const query = { _id: (id) };
+  const query = { _id:  (id) };
   const result = await wishlistCollection.deleteOne(query);
   
   res.send(result);
   });
+
+
+// Route to fetch wishlist items for the current user
+app.get('/wishlist/:userEmail',  async (req, res) => {
+      const userEmail=req.params.id
+    const query={userEmail:userEmail}
+    const wishlistItems = await wishlistCollection.find(query).toArray(); 
+    res.json(wishlistItems);
+ 
+});
+
+
+
+
+  
    // Endpoint to get comments by blog ID
    app.get('/comments/:blogId', async (req, res) => {
     const { blogId } = req.params;
@@ -130,6 +142,7 @@ app.delete('/wishlists/:id', async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
+  
   
    // Endpoint to get comments by blog ID
 app.get('/comments', async (req, res) => {
@@ -163,7 +176,7 @@ app.get('/comments', async (req, res) => {
     });
     
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
